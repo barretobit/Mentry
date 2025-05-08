@@ -1,0 +1,73 @@
+# Build artifacts
+bin/
+obj/
+[Bb]uild/
+[Bb]uild[Ll]og.*
+
+# Rider project files
+.idea/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Mono auto generated files
+mono_crash.*
+
+# Visual Studio files
+.vscode/
+.vs/
+*.dbmdl
+*.pdb
+*.cache
+*.log
+*.tlog
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+project.lock.json
+project.fragment.lock.json
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Desktop.ini
+Desktop.ini
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# JSON settings that shouldn't be tracked
+appsettings.Development.json
+secrets.json
+
+# Others
+*.bak
+*.tmp
+*.old
+
+# Ignore local data files if needed
+*.db
+*.json
+!Resources/*.json  # Keep specific ones (if needed)
+
+# Ignore publish output
+publish/
