@@ -1,0 +1,28 @@
+﻿<Window x:Class="Mentry.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:Mentry.ViewModels"
+        Title="Mentry – Daily Focus" Height="400" Width="350"
+        WindowStartupLocation="CenterScreen">
+    <Window.DataContext>
+        <viewModels:MainViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="16">
+        <StackPanel>
+            <TextBlock Text="Today's Top 3 Focus Tasks" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" />
+
+            <ItemsControl ItemsSource="{Binding TodayTasks}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Description}" IsChecked="{Binding IsCompleted}" FontSize="14" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+            <TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}"
+                     Margin="0,10,0,0" />
+            <Button Content="Add Task" Command="{Binding AddTaskCommand}" Margin="0,5,0,0" />
+        </StackPanel>
+    </Grid>
+</Window>
