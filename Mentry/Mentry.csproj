@@ -10,11 +10,11 @@
 
   <ItemGroup>
     <Folder Include="Themes\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.6" />
   </ItemGroup>
 
 </Project>

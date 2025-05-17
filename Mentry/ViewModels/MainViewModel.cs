@@ -40,9 +40,29 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private void ToggleComplete(FocusTask task)
+    private async Task ToggleCompleteAsync(FocusTask task)
     {
         task.IsCompleted = !task.IsCompleted;
+
+        var entry = new FocusEntry
+        {
+            Date = DateTime.Today,
+            Tasks = TodayTasks.ToList()
+        };
+
+        await _storage.SaveAsync(entry);
         OnPropertyChanged(nameof(TodayTasks));
+    }
+
+    private async void LoadTodayAsync()
+    {
+        var entry = await _storage.LoadAsync(DateTime.Today);
+        if (entry?.Tasks != null)
+        {
+            foreach (var task in entry.Tasks)
+            {
+                TodayTasks.Add(task);
+            }
+        }
     }
 }
