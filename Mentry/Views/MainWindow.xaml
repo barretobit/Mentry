@@ -4,9 +4,6 @@
         xmlns:viewModels="clr-namespace:Mentry.ViewModels"
         Title="Mentry – Daily Focus" Height="400" Width="350"
         WindowStartupLocation="CenterScreen">
-    <Window.DataContext>
-        <viewModels:MainViewModel />
-    </Window.DataContext>
 
     <Grid Background="{StaticResource BackgroundBrush}" Margin="16">
         <Border CornerRadius="12" Background="{StaticResource CardBrush}" Padding="16"
@@ -27,8 +24,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}"
-                     PlaceholderText="New Task..."
+                <TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}"                    
                      Margin="0,10,0,0" Padding="6"
                      Background="#FFF" BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1" />
 
