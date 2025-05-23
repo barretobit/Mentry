@@ -1,6 +1,6 @@
 ﻿using Mentry.Models;
 
-namespace Mentry.Services;
+namespace Mentry.Services.Interfaces;
 
 public interface IStorageService
 {

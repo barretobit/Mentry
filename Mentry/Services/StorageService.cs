@@ -1,10 +1,11 @@
 ﻿using System.IO;
 using System.Text.Json;
 using Mentry.Models;
+using Mentry.Services.Interfaces;
 
 namespace Mentry.Services;
 
-public class JsonStorageService : IStorageService
+public class StorageService : IStorageService
 {
     private const string FolderPath = "Data";
 
