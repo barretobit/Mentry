@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using Mentry.Services;
+using Mentry.Services.Interfaces;
 using Mentry.ViewModels;
 using Mentry.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,8 @@ public partial class App : Application
 
     private void ConfigureServices(IServiceCollection services)
     {
-        services.AddSingleton<IStorageService, JsonStorageService>();
+        services.AddSingleton<IStorageService, StorageService>();
+        services.AddSingleton<INoteService, NoteService>();
         services.AddTransient<MainViewModel>();
         services.AddTransient<MainWindow>();
     }
