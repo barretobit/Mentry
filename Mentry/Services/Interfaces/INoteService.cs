@@ -6,5 +6,5 @@ public interface INoteService
 {
     Task SaveNoteAsync(DailyNote note);
 
-    Task<DailyNote?> LoadNoteAsync(DateOnly date);
+    Task<DailyNote?> LoadByDateAsync(DateTime date);
 }
