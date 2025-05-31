@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text.Json;
+using Mentry.Helpers;
 using Mentry.Models;
 using Mentry.Services.Interfaces;
 
@@ -7,25 +8,20 @@ namespace Mentry.Services;
 
 public class StorageService : IStorageService
 {
-    private const string FolderPath = "Data";
-
-    private static string GetFilePath(DateTime date) => Path.Combine(FolderPath, $"{date:yyyy-MM-dd}.json");
-
     public async Task SaveAsync(FocusEntry entry)
     {
-        if (!Directory.Exists(FolderPath))
-            Directory.CreateDirectory(FolderPath);
-
+        var filePath = PathHelper.GetDailyFilePath(entry.Date);
         var json = JsonSerializer.Serialize(entry, new JsonSerializerOptions { WriteIndented = true });
-        await File.WriteAllTextAsync(GetFilePath(entry.Date), json);
+        await File.WriteAllTextAsync(filePath, json);
     }
 
     public async Task<FocusEntry?> LoadAsync(DateTime date)
     {
-        var file = GetFilePath(date);
-        if (!File.Exists(file)) return null;
+        var filePath = PathHelper.GetDailyFilePath(date);
+        if (!File.Exists(filePath))
+            return null;
 
-        var json = await File.ReadAllTextAsync(file);
+        var json = await File.ReadAllTextAsync(filePath);
         return JsonSerializer.Deserialize<FocusEntry>(json);
     }
 }
