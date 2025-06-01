@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Mentry.Models;
-using Mentry.Services;
 using Mentry.Services.Interfaces;
 
 namespace Mentry.ViewModels;
@@ -12,11 +11,11 @@ public partial class MainViewModel : ObservableObject
     private readonly IStorageService _storageService;
     private readonly INoteService _noteService;
 
-    public MainViewModel(IStorageService storage, INoteService note)
+    public MainViewModel(IStorageService storageService, INoteService noteService)
     {
-        _storageService = storage;
-        _noteService = note;
-        LoadTodayAsync();
+        _storageService = storageService;
+        _noteService = noteService;
+        LoadTodayAsync(); // fire and forget (safe here)
     }
 
     [ObservableProperty]
@@ -27,9 +26,19 @@ public partial class MainViewModel : ObservableObject
 
     public ObservableCollection<FocusTask> TodayTasks { get; } = new();
 
-    public async Task LoadNoteAsync()
+    private async void LoadTodayAsync()
     {
-        var note = await _noteService.LoadNoteAsync(DateOnly.FromDateTime(DateTime.Today));
+        // Load focus tasks
+        var entry = await _storageService.LoadAsync(DateTime.Today);
+        if (entry?.Tasks is { Count: > 0 })
+        {
+            TodayTasks.Clear();
+            foreach (var task in entry.Tasks)
+                TodayTasks.Add(task);
+        }
+
+        // Load daily note
+        var note = await _noteService.LoadByDateAsync(DateTime.Today);
         DailyNote = note?.Note ?? string.Empty;
     }
 
@@ -41,13 +50,7 @@ public partial class MainViewModel : ObservableObject
             TodayTasks.Add(new FocusTask { Description = NewTaskDescription });
             NewTaskDescription = string.Empty;
 
-            var entry = new FocusEntry
-            {
-                Date = DateTime.Today,
-                Tasks = TodayTasks.ToList()
-            };
-
-            await _storageService.SaveAsync(entry);
+            await SaveFocusTasksAsync();
         }
     }
 
@@ -59,6 +62,7 @@ public partial class MainViewModel : ObservableObject
             Date = DateOnly.FromDateTime(DateTime.Today),
             Note = DailyNote ?? string.Empty
         };
+
         await _noteService.SaveNoteAsync(note);
     }
 
@@ -66,7 +70,12 @@ public partial class MainViewModel : ObservableObject
     private async Task ToggleCompleteAsync(FocusTask task)
     {
         task.IsCompleted = !task.IsCompleted;
+        await SaveFocusTasksAsync();
+        OnPropertyChanged(nameof(TodayTasks));
+    }
 
+    private async Task SaveFocusTasksAsync()
+    {
         var entry = new FocusEntry
         {
             Date = DateTime.Today,
@@ -74,18 +83,5 @@ public partial class MainViewModel : ObservableObject
         };
 
         await _storageService.SaveAsync(entry);
-        OnPropertyChanged(nameof(TodayTasks));
-    }
-
-    private async void LoadTodayAsync()
-    {
-        var entry = await _storageService.LoadAsync(DateTime.Today);
-        if (entry?.Tasks != null)
-        {
-            foreach (var task in entry.Tasks)
-            {
-                TodayTasks.Add(task);
-            }
-        }
     }
 }
