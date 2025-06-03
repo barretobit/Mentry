@@ -2,51 +2,55 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Mentry – Daily Focus" Height="550" Width="350"
-        WindowStartupLocation="CenterScreen" Background="#FF2B2B2B" WindowStyle="None" ResizeMode="CanResize" AllowsTransparency="False">
+        WindowStartupLocation="CenterScreen" Background="#FF2B2B2B" ResizeMode="CanResize">
 
     <Grid Background="{StaticResource BackgroundBrush}" Margin="16">
-    <Border Background="{StaticResource CardBrush}" Padding="16"
-                Effect="{DynamicResource DropShadow}">
-        <StackPanel>
-            <!-- Tasks Section -->
-            <TextBlock Text="Today's Top 3 Focus Tasks"
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="93*" />
+            <ColumnDefinition Width="13*" />
+        </Grid.ColumnDefinitions>
+        <Border Background="{StaticResource CardBrush}" Padding="16"
+                Effect="{DynamicResource DropShadow}" Grid.ColumnSpan="2">
+            <StackPanel>
+                <!-- Tasks Section -->
+                <TextBlock Text="Today's Top 3 Focus Tasks"
                            FontSize="20" FontWeight="Bold"
                            Foreground="{StaticResource TextBrush}" Margin="0,0,0,10" />
 
-            <ItemsControl ItemsSource="{Binding TodayTasks}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <CheckBox Content="{Binding Description}"
+                <ItemsControl ItemsSource="{Binding TodayTasks}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <CheckBox Content="{Binding Description}"
                                       IsChecked="{Binding IsCompleted}"
                                       Foreground="{StaticResource TextBrush}"
                                       FontSize="14" Margin="0,4" />
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
 
-            <TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding NewTaskDescription, UpdateSourceTrigger=PropertyChanged}"
                          Margin="0,10,0,0" Padding="6"
                          Background="#FFF" BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1" />
 
-            <Button Content="Add Task" Command="{Binding AddTaskCommand}"
+                <Button Content="Add Task" Command="{Binding AddTaskCommand}"
                         Background="{StaticResource PrimaryBrush}" Foreground="White"
                         Margin="0,8,0,20" Padding="8" FontWeight="Bold" />
 
-            <!-- Daily Note Section -->
-            <TextBlock Text="📝 Today's Note"
+                <!-- Daily Note Section -->
+                <TextBlock Text="📝 Today's Note"
                            FontSize="16" FontWeight="Bold"
                            Foreground="{StaticResource TextBrush}" Margin="0,0,0,5" />
 
-            <TextBox Text="{Binding DailyNote, Mode=TwoWay}"
+                <TextBox Text="{Binding DailyNote, Mode=TwoWay}"
                          AcceptsReturn="True" TextWrapping="Wrap"
                          VerticalScrollBarVisibility="Auto"
                          Height="100" Padding="6"
                          Background="#FFF" BorderBrush="{StaticResource PrimaryBrush}" BorderThickness="1" />
 
-            <Button Content="Save Note" Command="{Binding SaveNoteCommand}"
+                <Button Content="Save Note" Command="{Binding SaveNoteCommand}"
                         Background="{StaticResource PrimaryBrush}" Foreground="White"
                         Margin="0,8,0,0" Padding="8" FontWeight="Bold" />
-        </StackPanel>
-    </Border>
+            </StackPanel>
+        </Border>
     </Grid>
 </Window>
