@@ -1,15 +1,13 @@
-﻿using System.Windows;
+﻿using System.IO;
+using System.Windows;
+using Mentry.Models;
 using Mentry.Services;
 using Mentry.Services.Interfaces;
 using Mentry.ViewModels;
 using Mentry.Views;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Mentry;
-
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App : Application
 {
     public new static App Current => (App)Application.Current;
@@ -18,14 +16,30 @@ public partial class App : Application
     public App()
     {
         var services = new ServiceCollection();
+        var configuration = BuildConfiguration();
+
+        var gitSettings = new GitSettings();
+        configuration.GetSection("Git").Bind(gitSettings);
+        services.AddSingleton(gitSettings);
+
         ConfigureServices(services);
         Services = services.BuildServiceProvider();
+    }
+
+    private IConfiguration BuildConfiguration()
+    {
+        return new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("AppSettings.json", optional: false, reloadOnChange: true)
+            .Build();
     }
 
     private void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IStorageService, StorageService>();
         services.AddSingleton<INoteService, NoteService>();
+        services.AddSingleton<IGitHistoryService, GitHistoryService>();
+
         services.AddTransient<MainViewModel>();
         services.AddTransient<MainWindow>();
     }
