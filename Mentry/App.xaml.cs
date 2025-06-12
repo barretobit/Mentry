@@ -1,12 +1,12 @@
-﻿using System.IO;
+﻿using System;
 using System.Windows;
-using Mentry.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Mentry.Services;
-using Mentry.Services.Interfaces;
 using Mentry.ViewModels;
 using Mentry.Views;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+using Mentry.Services.Interfaces;
+
+namespace Mentry;
 
 public partial class App : Application
 {
@@ -16,38 +16,28 @@ public partial class App : Application
     public App()
     {
         var services = new ServiceCollection();
-        var configuration = BuildConfiguration();
-
-        var gitSettings = new GitSettings();
-        configuration.GetSection("Git").Bind(gitSettings);
-        services.AddSingleton(gitSettings);
-
         ConfigureServices(services);
         Services = services.BuildServiceProvider();
     }
 
-    private IConfiguration BuildConfiguration()
-    {
-        return new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("AppSettings.json", optional: false, reloadOnChange: true)
-            .Build();
-    }
-
     private void ConfigureServices(IServiceCollection services)
     {
+        // Register your services
         services.AddSingleton<IStorageService, StorageService>();
         services.AddSingleton<INoteService, NoteService>();
-        services.AddSingleton<IGitHistoryService, GitHistoryService>();
 
+        // ViewModels
         services.AddTransient<MainViewModel>();
+
+        // Views
         services.AddTransient<MainWindow>();
     }
 
     protected override void OnStartup(StartupEventArgs e)
     {
+        base.OnStartup(e);
+
         var mainWindow = Services.GetRequiredService<MainWindow>();
         mainWindow.Show();
-        base.OnStartup(e);
     }
 }
