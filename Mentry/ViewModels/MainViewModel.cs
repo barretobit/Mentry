@@ -15,7 +15,9 @@ public partial class MainViewModel : ObservableObject
     {
         _storageService = storageService;
         _noteService = noteService;
-        LoadTodayAsync(); // fire and forget (safe here)
+
+        // fire and forget (safe here)
+        LoadTodayAsync();
     }
 
     [ObservableProperty]
